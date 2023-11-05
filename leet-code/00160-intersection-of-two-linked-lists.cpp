@@ -8,21 +8,35 @@
  */
 
 class Solution {
-  public:
-    ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
-      unordered_set<ListNode*> visitedNodes;
+  private:
+    int getListSize(ListNode* head) {
+      int size = 0;
 
-      while (headA != nullptr) {
-        visitedNodes.insert(headA);
-        headA = headA->next;
+      while (head != nullptr) {
+        size += 1;
+        head = head->next;
       }
 
-      while (headB != nullptr) {
-        if (visitedNodes.contains(headB)) {
-          return headB;
+      return size;
+    }
+
+  public:
+    ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
+      int sizeOfListA = getListSize(headA);
+      int sizeOfListB = getListSize(headB);
+
+      while (headA != nullptr && headB != nullptr) {
+        if (headA == headB) {
+          return headA;
         }
 
-        headB = headB->next;
+        if (sizeOfListA > sizeOfListB) {
+          headA = headA->next;
+          sizeOfListA -= 1;
+        } else {
+          headB = headB->next;
+          sizeOfListB -= 1;
+        }
       }
 
       return nullptr;
