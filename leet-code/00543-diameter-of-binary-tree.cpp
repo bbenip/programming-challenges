@@ -12,35 +12,23 @@
 
 class Solution {
   private:
-    pair<int, int> diameterAndDepthOfBinaryTree(TreeNode* root) {
+    int depthOfBinaryTree(TreeNode* root, int& diameter) {
       if (root == nullptr) {
-        return { 0, 0 };
+        return 0;
       }
 
-      const auto [diameterOfLeftSubtree, leftDepth] = (
-        diameterAndDepthOfBinaryTree(root->left)
-      );
+      const int leftDepth = depthOfBinaryTree(root->left, diameter);
+      const int rightDepth = depthOfBinaryTree(root->right, diameter);
 
-      const auto [diameterOfRightSubtree, rightDepth] = (
-        diameterAndDepthOfBinaryTree(root->right)
-      );
+      diameter = max(diameter, leftDepth + rightDepth);
 
-      const int maxSubtreeDiameter = max(
-        diameterOfLeftSubtree,
-        diameterOfRightSubtree
-      );
-
-      const int diameterPassingThroughRoot = leftDepth + rightDepth;
-
-      const int diameter = max(maxSubtreeDiameter, diameterPassingThroughRoot);
-      const int depth = max(leftDepth, rightDepth) + 1;
-
-      return { diameter, depth };
+      return max(leftDepth, rightDepth) + 1;
     }
 
   public:
     int diameterOfBinaryTree(TreeNode* root) {
-      const auto [diameter, depth] = diameterAndDepthOfBinaryTree(root);
+      int diameter = 0;
+      depthOfBinaryTree(root, diameter);
 
       return diameter;
     }
