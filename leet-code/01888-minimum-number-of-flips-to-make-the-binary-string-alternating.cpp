@@ -6,44 +6,25 @@ class Solution {
 
       int minimumNumberOfFlips = s.size();
 
-      char firstCharacterInFlips1 = '0';
-      int numberOfFlips1 = 0;
-
-      char firstCharacterInFlips2 = '1';
-      int numberOfFlips2 = 0;
+      int numberOfFlips = 0;
 
       while (endIndex < s.size() * 2) {
         const char firstCharacter = s[startIndex % s.size()];
         const char lastCharacter = s[endIndex % s.size()];
 
+        const char expectedLastCharacter = endIndex % 2 == 0 ? '0' : '1';
+
+        if (lastCharacter != expectedLastCharacter) {
+          numberOfFlips += 1;
+        }
+
         int substringSize = endIndex - startIndex + 1;
 
-        const char lastCharacterInFlips1 = (
-          (firstCharacterInFlips1 == '0' ^ substringSize % 2 == 0) ? '0' : '1'
-        );
-
-        const char lastCharacterInFlips2 = (
-          (lastCharacterInFlips1 == '0') ? '1' : '0'
-        );
-
-        if (lastCharacter != lastCharacterInFlips1) {
-          numberOfFlips1 += 1;
-        }
-
-        if (lastCharacter != lastCharacterInFlips2) {
-          numberOfFlips2 += 1;
-        }
-
         if (substringSize > s.size()) {
-          if (firstCharacter != firstCharacterInFlips1) {
-            numberOfFlips1 -= 1;
+          const char expectedFirstCharacter = startIndex % 2 == 0 ? '0' : '1';
+          if (firstCharacter != expectedFirstCharacter) {
+            numberOfFlips -= 1;
           }
-
-          if (firstCharacter != firstCharacterInFlips2) {
-            numberOfFlips2 -= 1;
-          }
-
-          swap(firstCharacterInFlips1, firstCharacterInFlips2);
 
           startIndex += 1;
           substringSize -= 1;
@@ -52,7 +33,7 @@ class Solution {
         if (substringSize == s.size()) {
           minimumNumberOfFlips = min(
             minimumNumberOfFlips,
-            min(numberOfFlips1, numberOfFlips2)
+            min(numberOfFlips, substringSize - numberOfFlips)
           );
         }
 
