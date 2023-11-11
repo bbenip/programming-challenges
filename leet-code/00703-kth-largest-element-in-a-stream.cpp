@@ -6,11 +6,7 @@ class KthLargest {
   public:
     KthLargest(int k, vector<int>& nums) : k { k } {
       for (const auto& num : nums) {
-        largestKElements.push(num);
-
-        if (largestKElements.size() > k) {
-          largestKElements.pop();
-        }
+        add(num);
       }
     }
 
