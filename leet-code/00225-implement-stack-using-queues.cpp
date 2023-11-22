@@ -6,25 +6,22 @@ class MyStack {
     MyStack() {}
 
     void push(int x) {
-      queue<int> updatedElements;
+      const int size = elements.size();
 
-      updatedElements.push(x);
+      elements.push(x);
 
-      while (!elements.empty()) {
-        const int currentElement = elements.front();
-        updatedElements.push(currentElement);
-
+      for (int i = 0; i < size; ++i) {
+        const int element = elements.front();
         elements.pop();
+        elements.push(element);
       }
-
-      elements = updatedElements;
     }
 
     int pop() {
-      const int element = elements.front();
+      const int poppedElement = elements.front();
       elements.pop();
 
-      return element;
+      return poppedElement;
     }
 
     int top() {
