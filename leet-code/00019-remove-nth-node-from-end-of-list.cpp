@@ -10,39 +10,34 @@
  */
 
 class Solution {
-  private:
-    int getSize(ListNode* head) {
-      int size = 0;
-
-      while (head != nullptr) {
-        size += 1;
-
-        head = head->next;
-      }
-
-      return size;
-    }
-
   public:
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-      const int size = getSize(head);
-      const int indexOfElementToRemove = size - n;
+      ListNode* slow = head;
+      ListNode* fast = head;
 
-      ListNode auxiliaryHead(-1, head);
-
-      ListNode* node = &auxiliaryHead;
-
-      for (int i = 0; i < indexOfElementToRemove; ++i) {
-        node = node->next;
+      for (int i = 0; i < n; ++i) {
+        fast = fast->next;
       }
 
-      ListNode* removedNode = node->next;
-      node->next = node->next->next;
+      if (fast == nullptr) {
+        ListNode* newHead = head->next;
+        head->next = nullptr;
+
+        return newHead;
+      }
+
+      while (fast->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next;
+      }
+
+      // slow->next is guaranteed to be a node
+      // Since slow must be before fast and fast is guaranteed to be a node
+
+      ListNode* removedNode = slow->next;
+      slow->next = slow->next->next;
       removedNode->next = nullptr;
 
-      ListNode* newHead = auxiliaryHead.next;
-      auxiliaryHead.next = nullptr;
-
-      return newHead;
+      return head;
     }
 };
