@@ -9,50 +9,32 @@ class Solution {
         total += num;
       }
 
-      unordered_map<int, int> leftSumToIndex;
-      unordered_map<int, int> rightSumToIndex;
+      const int target = total - k;
 
-      leftSumToIndex[0] = -1;
-      rightSumToIndex[0] = nums.size();
+      int startIndex = 0;
+      int endIndex = 0;
 
-      int leftSum = 0;
-      int rightSum = 0;
+      int sum = 0;
 
-      const int targetInnerSum = total - k;
+      while (endIndex < nums.size()) {
+        sum += nums[endIndex];
 
-      for (int i = 0; i < nums.size(); ++i) {
-        const int leftIndex = i;
-        const int rightIndex = nums.size() - 1 - i;
+        while (startIndex <= endIndex && sum > target) {
+          sum -= nums[startIndex];
+          startIndex += 1;
+        }
 
-        leftSum += nums[leftIndex];
-        rightSum += nums[rightIndex];
-
-        leftSumToIndex[leftSum] = leftIndex;
-        rightSumToIndex[rightSum] = rightIndex;
-
-        const int leftComplement = leftSum - targetInnerSum;
-        const int rightComplement = rightSum - targetInnerSum;
-
-        if (leftSumToIndex.contains(leftComplement)) {
-          const int indexOfComplement = leftSumToIndex[leftComplement];
-
+        if (sum == target) {
           minimumNumberOfOperations = min(
             minimumNumberOfOperations,
-            (int) (nums.size()) - (leftIndex - indexOfComplement)
+            ((int) nums.size()) - (endIndex - startIndex + 1)
           );
         }
 
-        if (rightSumToIndex.contains(rightComplement)) {
-          const int indexOfComplement = rightSumToIndex[rightComplement];
-
-          minimumNumberOfOperations = min(
-            minimumNumberOfOperations,
-            (int) (nums.size()) - (indexOfComplement - rightIndex)
-          );
-        }
+        endIndex += 1;
       }
 
-      if (minimumNumberOfOperations > nums.size()) {
+      if (minimumNumberOfOperations == nums.size() + 1) {
         return -1;
       }
 
