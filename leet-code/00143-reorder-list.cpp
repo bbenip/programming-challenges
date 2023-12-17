@@ -10,36 +10,61 @@
  */
 
 class Solution {
-  public:
-    void reorderList(ListNode* head) {
-      vector<ListNode*> nodes;
+  private:
+    int getListSize(ListNode* head) {
+      int size = 0;
 
       while (head != nullptr) {
-        nodes.push_back(head);
+        size += 1;
         head = head->next;
       }
 
-      int index1 = 0;
-      int index2 = nodes.size() - 1;
+      return size;
+    }
 
-      bool isEvenIteration = true;
+    ListNode* reverseList(ListNode* head) {
+      ListNode* previousNode = nullptr;
+      ListNode* currentNode = head;
 
-      while (index1 < index2) {
-        ListNode* node1 = nodes[index1];
-        ListNode* node2 = nodes[index2];
+      while (currentNode != nullptr) {
+        ListNode* nextNode = currentNode->next;
 
-        if (isEvenIteration) {
-          node1->next = node2;
-          index1 += 1;
-        } else {
-          node2->next = node1;
-          index2 -= 1;
-        }
-
-        isEvenIteration = !isEvenIteration;
+        currentNode->next = previousNode;
+        previousNode = currentNode;
+        currentNode = nextNode;
       }
 
-      ListNode* lastNode = nodes[index1];
-      lastNode->next = nullptr;
+      return previousNode;
+    }
+
+  public:
+    void reorderList(ListNode* head) {
+      const int size = getListSize(head);
+
+      if (size <= 1) {
+        return;
+      }
+
+      const int midpoint = size - (size / 2);
+
+      ListNode* node = head;
+
+      for (int i = 1; i < midpoint; ++i) {
+        node = node->next;
+      }
+
+      ListNode* secondHalfHead = node->next;
+      node->next = nullptr;
+
+      ListNode* nextNode = reverseList(secondHalfHead);
+
+      while (head != nullptr) {
+        ListNode* nextNextNode = head->next;
+
+        head->next = nextNode;
+        nextNode = nextNextNode;
+
+        head = head->next;
+      }
     }
 };
