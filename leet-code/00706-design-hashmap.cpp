@@ -1,3 +1,12 @@
+/*
+ * Suggested Improvements:
+ * - Enable resizing and establish resizing criteria
+ * -- Resizing should be done in a way that is amortized O(1)
+ * - Use a uniform and less predictable hash function
+ * - Use templates to make set work with other types
+ * - Use deque to make insertion and removal for colliding keys O(1)
+ */
+
 class MyHashMap {
   private:
     const int size = 100;
