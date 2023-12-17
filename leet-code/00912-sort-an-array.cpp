@@ -1,76 +1,68 @@
 class Solution {
   private:
-    vector<int> collate(const vector<int>& v1, const vector<int>& v2) {
-      const int size = v1.size() + v2.size();
+    void collate(
+      vector<int>& nums,
+      const int index1,
+      const int midpointIndex,
+      const int index2
+    ) {
       vector<int> collatedArray;
 
-      int index1 = 0;
-      int index2 = 0;
+      int leftIndex = index1;
+      int rightIndex = midpointIndex;
 
-      while (index1 < v1.size() && index2 < v2.size()) {
-        const int element1 = v1[index1];
-        const int element2 = v2[index2];
+      while (leftIndex < midpointIndex && rightIndex < index2) {
+        const int element1 = nums[leftIndex];
+        const int element2 = nums[rightIndex];
 
         if (element1 <= element2) {
           collatedArray.push_back(element1);
-          index1 += 1;
+          leftIndex += 1;
         } else {
           collatedArray.push_back(element2);
-          index2 += 1;
+          rightIndex += 1;
         }
       }
 
-      if (index1 < v1.size()) {
+      if (leftIndex < midpointIndex) {
         collatedArray.insert(
           collatedArray.end(),
-          v1.begin() + index1,
-          v1.end()
+          nums.begin() + leftIndex,
+          nums.begin() + midpointIndex
         );
       }
 
-      if (index2 < v2.size()) {
+      if (rightIndex < index2) {
         collatedArray.insert(
           collatedArray.end(),
-          v2.begin() + index2,
-          v2.end()
+          nums.begin() + rightIndex,
+          nums.begin() + index2
         );
       }
 
-      return collatedArray;
+      for (int i = index1; i < index2; ++i) {
+        nums[i] = collatedArray[i - index1];
+      }
+    }
+
+    void sortArray(vector<int>& nums, int index1, int index2) {
+      const int size = index2 - index1;
+
+      if (size <= 1) {
+        return;
+      }
+
+      const int midpointIndex = index1 + size / 2;
+
+      sortArray(nums, index1, midpointIndex);
+      sortArray(nums, midpointIndex, index2);
+
+      collate(nums, index1, midpointIndex, index2);
     }
 
   public:
     vector<int> sortArray(vector<int>& nums) {
-      if (nums.size() <= 1) {
-        return nums;
-      }
-
-      vector<int> leftHalfOfArray;
-
-      leftHalfOfArray.insert(
-        leftHalfOfArray.end(),
-        nums.begin(),
-        nums.begin() + nums.size() / 2
-      );
-
-      vector<int> sortedLeftHalfOfArray = sortArray(leftHalfOfArray);
-
-      vector<int> rightHalfOfArray;
-
-      rightHalfOfArray.insert(
-        rightHalfOfArray.end(),
-        nums.begin() + nums.size() / 2,
-        nums.end()
-      );
-
-      vector<int> sortedRightHalfOfArray = sortArray(rightHalfOfArray);
-
-      vector<int> sortedArray = collate(
-        sortedLeftHalfOfArray,
-        sortedRightHalfOfArray
-      );
-
-      nums = sortedArray;
+      sortArray(nums, 0, nums.size());
 
       return nums;
     }
