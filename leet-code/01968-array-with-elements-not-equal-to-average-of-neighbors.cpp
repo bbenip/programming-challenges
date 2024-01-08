@@ -1,20 +1,26 @@
 class Solution {
   public:
     vector<int> rearrangeArray(vector<int>& nums) {
-      sort(nums.begin(), nums.end());
+      for (int i = 1; i < nums.size() - 1; ++i) {
+        const int& previousNumber = nums[i - 1];
+        int& currentNumber = nums[i];
+        int& nextNumber = nums[i + 1];
 
-      vector<int> result;
+        const bool isIncreasing = (
+          previousNumber < currentNumber
+          && currentNumber < nextNumber
+        );
 
-      for (int i = 0; i < nums.size(); ++i) {
-        const bool isEvenIteration = i % 2 == 0;
+        const bool isDecreasing = (
+          previousNumber > currentNumber
+          && currentNumber > nextNumber
+        );
 
-        if (isEvenIteration) {
-          result.push_back(nums[i / 2]);
-        } else {
-          result.push_back(nums[nums.size() - 1  - i / 2]);
+        if (isIncreasing || isDecreasing) {
+          swap(currentNumber, nextNumber);
         }
       }
 
-      return result;
+      return nums;
     }
 };
