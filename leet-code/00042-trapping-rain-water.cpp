@@ -1,37 +1,25 @@
 class Solution {
   public:
     int trap(vector<int>& heights) {
-      vector<int> maxHeightToLeft = heights;
-      vector<int> maxHeightToRight = heights;
-
-      for (int i = 1; i < heights.size(); ++i) {
-        maxHeightToLeft[i] = max(maxHeightToLeft[i - 1], heights[i]);
-
-        maxHeightToRight[heights.size() - 1 - i] = max(
-          maxHeightToRight[heights.size() - i],
-          heights[heights.size() - 1 - i]
-        );
-      }
-
       int trappedWater = 0;
 
-      for (int i = 0; i < heights.size(); ++i) {
-        const int currentMaxHeightToLeft = maxHeightToLeft[i];
-        const int currentMaxHeightToRight = maxHeightToRight[i];
+      int leftIndex = 0;
+      int rightIndex = heights.size() - 1;
 
-        const int currentHeight = heights[i];
+      int leftMaxHeight = 0;
+      int rightMaxHeight = 0;
 
-        const bool isTrappedWater = (
-          currentMaxHeightToLeft > currentHeight
-          && currentMaxHeightToRight > currentHeight
-        );
+      while (leftIndex <= rightIndex) {
+        if (leftMaxHeight < rightMaxHeight) {
+          leftMaxHeight = max(leftMaxHeight, heights[leftIndex]);
+          trappedWater += leftMaxHeight - heights[leftIndex];
 
-        if (isTrappedWater) {
-          const int currentWaterTrapped = (
-            min(currentMaxHeightToLeft, currentMaxHeightToRight) - currentHeight
-          );
+          leftIndex += 1;
+        } else {
+          rightMaxHeight = max(rightMaxHeight, heights[rightIndex]);
+          trappedWater += rightMaxHeight - heights[rightIndex];
 
-          trappedWater += currentWaterTrapped;
+          rightIndex -= 1;
         }
       }
 
