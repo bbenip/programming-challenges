@@ -16,43 +16,28 @@ class Solution {
       vector<vector<int>> traversal;
 
       queue<TreeNode*> nodes;
-
-      if (root != nullptr) {
-        nodes.push(root);
-      }
-
-      nodes.push(nullptr);
-
-      vector<int> level;
+      nodes.push(root);
 
       while (!nodes.empty()) {
-        if (nodes.size() == 1) {
-          if (!level.empty()) {
-            traversal.push_back(level);
-            level.clear();
+        vector<int> level;
+        const int size = nodes.size();
+
+        for (int i = 0; i < size; ++i) {
+          TreeNode* currentNode = nodes.front();
+          nodes.pop();
+
+          if (currentNode == nullptr) {
+            continue;
           }
 
-          break;
-        }
-
-        TreeNode* currentNode = nodes.front();
-        nodes.pop();
-
-        if (currentNode == nullptr) {
-          traversal.push_back(level);
-          level.clear();
-
-          nodes.push(nullptr);
-        } else {
           level.push_back(currentNode->val);
 
-          if (currentNode->left != nullptr) {
-            nodes.push(currentNode->left);
-          }
+          nodes.push(currentNode->left);
+          nodes.push(currentNode->right);
+        }
 
-          if (currentNode->right != nullptr) {
-            nodes.push(currentNode->right);
-          }
+        if (!level.empty()) {
+          traversal.push_back(level);
         }
       }
 
