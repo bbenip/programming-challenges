@@ -10,29 +10,24 @@
  */
 
 class Solution {
-  private:
-    int getListSize(ListNode* head) {
-      int size = 0;
-
-      while (head != nullptr) {
-        head = head->next;
-        size += 1;
-      }
-
-      return size;
-    }
-
   public:
     ListNode* middleNode(ListNode* head) {
-      const int listSize = getListSize(head);
-      const int midwayIndex = listSize / 2;
+      ListNode sentinel = ListNode(0, head);
 
-      ListNode* node = head;
+      ListNode* slow = &sentinel;
+      ListNode* fast = &sentinel;
 
-      for (int i = 0; i < midwayIndex; ++i) {
-        node = node->next;
+      while (fast != nullptr) {
+        slow = slow->next;
+        fast = fast->next;
+
+        if (fast == nullptr) {
+          break;
+        }
+
+        fast = fast->next;
       }
 
-      return node;
+      return slow;
     }
 };
